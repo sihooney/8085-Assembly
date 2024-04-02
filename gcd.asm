@@ -9,10 +9,10 @@ LXI H, 1H
 MOV C, M ; Store y in register C
 MOV A, B
 CPI 0H ; Check if x = 0
-JZ zero
+JZ xzero
 MOV A, C
 CPI 0H ; Check if y = 0
-JZ zero
+JZ yzero
 euclid: MOV A, B
 CMP C ; Check if x = y
 JZ done ; If x = y, then finished
@@ -29,6 +29,18 @@ JMP euclid ; Loop again
 done: LXI H, 2H
 MOV M, B ; Output GCD
 JMP exit
-zero: LXI H, 2H
-MVI M, 0H ; Output 0 if any input is 0
+xzero: MOV A, C
+CPI 0H ; Check if y = 0
+JZ bothzero
+LXI H, 2H
+MOV M, C ; Otherwise gcd = y
+JMP exit
+yzero: MOV A, B
+CPI 0H ; Check if x = 0
+JZ bothzero
+LXI H, 2H
+MOV M, B ; Otherwise gcd = x
+JMP exit
+bothzero: LXI H, 2H
+MVI M, 0H ; Output 0 if both inputs 0
 exit: HLT
